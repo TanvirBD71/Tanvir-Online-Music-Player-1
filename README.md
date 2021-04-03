@@ -7,3 +7,7 @@
 - HTML
 - CSS [style/Presentation]
 - Javascript [Logic/Working of Music player]
+
+## Steps to execute this calculator:
+- Download the entire code 
+- Open up the index.html.
