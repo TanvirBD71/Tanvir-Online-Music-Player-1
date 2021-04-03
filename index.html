@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <script src="font.js"></script>
+    <!--
+    <script src="https://kit.fontawesome.com/a062562745.js" crossorigin="anonymous"></script>
+    <title>MP3 Player |Tanvir Ahmad |</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+-->
+    <link href="favicon.png" rel="shortcut icon">
+</head>
+<style>
+    body {
+        background-color: #2d2d2d;
+        color: #ffb23e;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    #myProgress {
+        width: 420px;
+        background-color: #9999ff;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+    
+    #myBar {
+        width: 0%;
+        height: 5px;
+        background-color: #ff5714;
+        border-radius: 10px;
+    }
+    
+    .logo {
+        fill: red;
+    }
+    
+    .btn-action {
+        cursor: pointer;
+        padding-top: 10px;
+        width: 30px;
+    }
+    
+    .btn-ctn,
+    .infos-ctn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .infos-ctn {
+        padding-top: 20px;
+    }
+    
+    .btn-ctn>div {
+        padding: 5px;
+        margin-top: 18px;
+        margin-bottom: 18px;
+    }
+    
+    .infos-ctn>div {
+        margin-bottom: 8px;
+        color: #66ff94;
+    }
+    
+    .first-btn {
+        margin-left: 3px;
+    }
+    
+    .duration {
+        margin-left: 10px;
+    }
+    
+    .title {
+        margin-left: 10px;
+        width: 210px;
+        text-align: center;
+    }
+    
+    .player-ctn {
+        border-radius: 15px;
+        width: 420px;
+        padding: 10px;
+        background-color: #373737;
+        margin: auto;
+        margin-top: 100px;
+    }
+    
+    .playlist-track-ctn {
+        display: flex;
+        background-color: #464646;
+        margin-top: 3px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .playlist-track-ctn:last-child {
+        /*border: 1px solid #ffc266; */
+    }
+    
+    .playlist-track-ctn>div {
+        margin: 10px;
+    }
+    
+    .playlist-info-track {
+        width: 80%;
+    }
+    
+    .playlist-info-track,
+    .playlist-duration {
+        padding-top: 7px;
+        padding-bottom: 7px;
+        color: #e9cc95;
+        font-size: 14px;
+        pointer-events: none;
+    }
+    
+    .playlist-ctn {
+        padding-bottom: 20px;
+    }
+    
+    .active-track {
+        background: #252222;
+        color: #ffc266 !important;
+        font-weight: bold;
+    }
+    
+    .active-track>.playlist-info-track,
+    .active-track>.playlist-duration,
+    .active-track>.playlist-btn-play {
+        color: #ffc266 !important;
+    }
+    
+    .playlist-btn-play {
+        pointer-events: none;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    
+    .fas {
+        color: #ff1e00;
+        font-size: 20px;
+    }
+    
+    .file-select center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 420px;
+        background: rgb(105, 105, 105);
+        padding: 10px 0px;
+        margin: 0 auto;
+        cursor: pointer;
+    }
+    
+    .files {
+        display: none;
+    }
+    /* width */
+    
+     ::-webkit-scrollbar {
+        width: 10px;
+    }
+    /* Track */
+    
+     ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px grey;
+        border-radius: 10px;
+    }
+    /* Handle */
+    
+     ::-webkit-scrollbar-thumb {
+        background: #111;
+        border-radius: 10px;
+    }
+    /* Handle on hover */
+    
+     ::-webkit-scrollbar-thumb:hover {
+        background: #222;
+    }
+    
+    .timer {
+        width: 100%;
+    }
+    
+    .title {
+        text-align: center;
+        width: 540%;
+    }
+</style>
+<p align="center">Welcome to Online Music Player.|
+    <a style="color: aqua;" href="https://twitter.com/_TANVIR_AHMAD_" target="_blank"><i class='fa fa-twitter'></i> Tanvir Ahmad </a>|<br>
+    <!--For Better View Please Use in Desktop Mode.-->
+</p>
+<div class="player-ctn">
+    <div class="infos-ctn">
+        <div class="timer">00:00</div>
+        <div class="title"></div>
+        <div class="duration">00:00</div>
+    </div>
+    <div id="myProgress">
+        <div id="myBar"></div>
+    </div>
+    <div class="btn-ctn">
+        <div class="btn-action first-btn" onclick="previous()">
+            <div id="btn-faws-back">
+                <i class='fas fa-step-backward'></i>
+            </div>
+        </div>
+        <div class="btn-action" onclick="rewind()">
+            <div id="btn-faws-rewind">
+                <i class='fas fa-backward'></i>
+            </div>
+        </div>
+        <div class="btn-action" onclick="toggleAudio()">
+            <div id="btn-faws-play-pause">
+                <i class='fas fa-play' id="icon-play"></i>
+                <i class='fas fa-pause' id="icon-pause" style="display: none"></i>
+            </div>
+        </div>
+
+        <div class="btn-action" onclick="forward()">
+            <div id="btn-faws-forward">
+                <i class='fas fa-forward'></i>
+            </div>
+        </div>
+        <div class="btn-action" onclick="nextSong()">
+            <div id="btn-faws-next">
+                <i class='fas fa-step-forward'></i>
+            </div>
+        </div>
+        <div class="btn-mute" id="toggleMute" onclick="toggleMute()">
+            <div id="btn-faws-volume">
+                <i id="icon-vol-up" class='fas fa-volume-up'></i>
+                <i id="icon-vol-mute" class='fas fa-volume-mute' style="display: none"></i>
+            </div>
+        </div>
+    </div>
+    <div class="file-select">
+        <center>Select mp3 Files to Play Here</center>
+    </div>
+    <div class="playlist-ctn" id="songs-list"></div>
+</div>
+</body>
+
+</html>
+<input type="file" class="files" accept=".mp3,audio/*" multiple>
+<audio src="" id="player"></audio>
+<script src="script.js"></script>
+
+<script>
+    $('.files').on('change', function(e) {
+        var target = e.currentTarget;
+        var files = target.files;
+        songs = [];
+        for (var i = 0; i < files.length; i++) {
+            src = URL.createObjectURL(files[i]);
+            temp = {};
+            temp.name = files[i].name;
+            temp.src = src;
+            songs.push(temp);
+        }
+        setSongs(songs);
+    });
+
+    function setSongs(songs) {
+        html = '';
+        for (var i = 0; i < songs.length; i++) {
+            html += '<div data-src="' + songs[i].src + '" class="playlist-track-ctn" id="ptc-' + i + '" data-index="' + i +
+                '"><div class="playlist-btn-play" id="pbp-' + i + '"><i class="fas fa-play" height="40" width="40" id="p-img-' +
+                i + '" aria-hidden="true"></i></div><div class="playlist-info-track">' + songs[i].name + '</div></div>';
+        }
+        $("#songs-list").append(html);
+    }
+    $(document).on('click', '#songs-list .playlist-track-ctn', function() {
+        src = $(this).attr('data-src');
+        play(src);
+    });
+
+    function formatNumber(num) {
+        if (num < 10) {
+            return '0' + num;
+        }
+        return num;
+    }
+
+    function setDuration(seconds) {
+        time = $("#player")[0].duration;
+        minutes = Math.floor(time / 60);
+        seconds = parseInt(time - minutes * 60);
+        $(".duration").html(formatNumber(minutes) + ':' + formatNumber(seconds));
+    }
+    audio = document.getElementById('player');
+    audio.addEventListener("ended", function() {
+        audio.currentTime = 0;
+        audio.play();
+    });
+    audio.addEventListener('timeupdate', function() {
+        currentTime = audio.currentTime;
+        percent = (currentTime / $("#player")[0].duration) * 100;
+        document.getElementById("myBar").style.width = percent + "%";
+        currentTime = document.getElementById('player').currentTime;
+        minutes = Math.floor(currentTime / 60);
+        seconds = parseInt(currentTime - minutes * 60);
+        $(".timer").html(formatNumber(minutes) + ':' + formatNumber(seconds));
+    }, false);
+
+    function play(src) {
+        $("#player").attr('src', src);
+        $("#player")[0].play();
+        $("#icon-play").hide();
+        $("#icon-pause").show();
+        $(".playlist-track-ctn").removeClass('active-track');
+        $(".playlist-track-ctn[data-src='" + src + "']").addClass('active-track');
+        $(".title").html($(".playlist-track-ctn.active-track").text());
+        setTimeout(function() {
+            setDuration();
+        }, 1000);
+    }
+
+    function nextSong() {
+        current = $(".active-track");
+        next = current.next('.playlist-track-ctn');
+        next.click();
+    }
+
+    function previous() {
+        current = $(".active-track");
+        next = current.prev('.playlist-track-ctn');
+        next.click();
+    }
+
+    function toggleAudio() {
+        var audioElem = document.getElementById('player');
+        if (audioElem.getAttribute('data-src') == '') {
+            $("#songs-list .playlist-track-ctn:first").click();
+        } else {
+            if (audioElem.paused) {
+                audioElem.play();
+                $("#icon-play").hide();
+                $("#icon-pause").show();
+            } else {
+                audioElem.pause();
+                $("#icon-play").show();
+                $("#icon-pause").hide();
+            }
+        }
+    }
+
+    function toggleMute() {
+        var audioElem = document.getElementById('player');
+        if (audioElem.muted) {
+            audioElem.muted = false;
+            $("#icon-vol-up").show();
+            $("#icon-vol-mute").hide();
+        } else {
+            audioElem.muted = true;
+            $("#icon-vol-up").hide();
+            $("#icon-vol-mute").show();
+        }
+    }
+    var progressbar = document.querySelector('#myProgress');
+    progressbar.addEventListener("click", seek.bind(this));
+
+    function seek(event) {
+        var percent = event.offsetX / progressbar.offsetWidth;
+        $("#player")[0].currentTime = percent * $("#player")[0].duration;
+        document.getElementById("myBar").style.width = percent * 100 + "%";
+    }
+    $(".file-select center").click(function() {
+        $(".files").click();
+    });
+
+    function forward() {
+        var percent = parseInt(document.getElementById("myBar").style.width);
+        total = $("#player")[0].duration;
+        increase_percent = (100 / total) * 5;
+        $("#player")[0].currentTime = $("#player")[0].currentTime + 5;
+        document.getElementById("myBar").style.width = percent + 5 + "%";
+    }
+
+    function rewind() {
+        var percent = parseInt(document.getElementById("myBar").style.width);
+        total = $("#player")[0].duration;
+        increase_percent = (100 / total) * 5;
+        $("#player")[0].currentTime = $("#player")[0].currentTime - 5;
+        document.getElementById("myBar").style.width = percent - 5 + "%";
+    }
+</script>
